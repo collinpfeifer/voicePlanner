@@ -10,17 +10,19 @@ const selectDateStart = (rootState: RootState) => rootState.recorder;
 const selectRecorderState = (rootState: RootState) =>
   rootState.recorder.dateStart;
 
+// Adding zeros to seconds to look like realistic counter
 const addZero = (n: number) => (n < 10 ? `0${n}` : `${n}`);
 
 const onData = (recordedBlob: Blob) => {
-    console.log('chunk of real-time data is: ', recordedBlob);
-  }
- 
+  console.log('chunk of real-time data is: ', recordedBlob);
+};
+
 const onStop = (recordedBlob: ReactMicStopEvent) => {
-    console.log('recordedBlob is: ', recordedBlob);
-  }
+  console.log('recordedBlob is: ', recordedBlob);
+};
 
 const Recorder = () => {
+    //Initialzing state and dispatch for redux
   const dispatch = useDispatch();
   const dateStart = useSelector(selectDateStart);
   const started = dateStart.dateStart !== '';
@@ -28,11 +30,12 @@ const Recorder = () => {
   const [, setCount] = useState<number>(0);
   const [record, setRecord] = useState<boolean>(false);
 
+  //starting and stopping record button
   const handleClick = () => {
     if (started) {
-        window.clearInterval(interval.current);
-        setRecord(false);
-        dispatch(stop());
+      window.clearInterval(interval.current);
+      setRecord(false);
+      dispatch(stop());
     } else {
       dispatch(start());
       setRecord(true);
@@ -41,13 +44,14 @@ const Recorder = () => {
       }, 1000);
     }
   };
-
+  
+  //Used for stopping possible memory leak
   useEffect(() => {
     return () => {
       window.clearInterval(interval.current);
     };
   }, []);
-
+  //calculating time to display from Date()
   let seconds = started
     ? Math.floor((Date.now() - new Date(dateStart.dateStart).getTime()) / 1000)
     : 0;
