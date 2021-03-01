@@ -8,6 +8,7 @@ const initialState: RecorderState = {
   dateStart: '',
 };
 
+
 const recorderReducer = (
   state: RecorderState = initialState,
   action: StartAction | StopAction
